@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <h3>Cart (<span id="price"></span>)</h3>
+
+
+    <ul id="list">
+
+    </ul>
+
+
+    <script>
+
+        const { state } = parent;
+
+
+        const LOAD = "load";
+        const CHANGE_CART = "changeCart";
+        document.querySelector("#price").innerHTML = 0
+
+        state.on(CHANGE_CART, ({ cart }) => {
+            document.querySelector("#list").innerHTML = ""
+            document.querySelector("#price").innerHTML = cart.length
+            cart.forEach((element, index) => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+        <img width="90" src="${element.img}" />
+        <h4>${element.name}</h4>
+        <p>Price ${element.price}</p>
+        <a href="#" onClick="remove(${element.id})" >Remove</a>
+
+        `
+                document.querySelector("#list").append(li);
+            });
+
+
+            const react = parent.document.querySelector('#checkout').shadowRoot.querySelector("iframe");
+            const vue = parent.document.querySelector('#shipping').shadowRoot.querySelector("iframe");
+            react.contentWindow.postMessage(cart, '*');
+            vue.contentWindow.postMessage(cart, '*');
+
+
+        });
+
+        function remove(id) {
+            state.dispatch(CHANGE_CART, ({ cart }) => {
+                const newCart = [...cart].filter(item => item.id !== id)
+                return { cart: newCart }
+            });
+
+        }
+
+
+
+
+    </script>
+
+</body>
+
+
+
+
+</html>

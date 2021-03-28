@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@next"></script>
+
+    <title>Document</title>
+    <style>
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit] {
+            width: 50px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 5px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+        div {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div id="app">
+
+
+
+        <div>
+            <form>
+
+                <label v-show="cart.length != 0" for="country">Car</label>
+                <select v-show="cart.length != 0" id="country" name="country">
+                    <option v-for="item in cart" :key="item.id" :value="item.id">
+                        {{ item.name  }}({{ item.price  }}$)</option>
+                </select>
+
+                <label for="lname">Address</label>
+                <textarea :disabled="cart.length == 0" id="lname" name="lastname" placeholder="Your Address">
+                      </textarea>
+
+                <input :disabled="cart.length == 0" type="submit" value="Submit">
+            </form>
+        </div>
+
+
+    </div>
+
+    <script>
+
+
+
+        const App = {
+            data() {
+                return {
+                    cart: []
+                }
+            },
+            mounted() {
+
+                const handleMessage = (e) => {
+                    this.cart = e.data;
+                }
+
+                if (window.addEventListener) {
+                    window.addEventListener('message', handleMessage, false);
+                } else if (window.attachEvent) { // ie8
+                    window.attachEvent('onmessage', handleMessage);
+                }
+
+            }
+        }
+
+        Vue.createApp(App).mount('#app')
+    </script>
+</body>
+
+</html>
